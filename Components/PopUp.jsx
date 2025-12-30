@@ -78,11 +78,10 @@ const PopUp = ({ setOpenModel, donate, donateFunction }) => {
           <button
             onClick={handleDonate}
             disabled={loading}
-            className={`${
-              loading
+            className={`${loading
                 ? "bg-blue-300 cursor-not-allowed"
                 : "bg-blue-600 hover:bg-blue-700"
-            } text-white px-4 py-2 rounded-md transition`}
+              } text-white px-4 py-2 rounded-md transition`}
           >
             {loading ? "Processing..." : "Donate"}
           </button>

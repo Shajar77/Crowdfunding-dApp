@@ -11,11 +11,11 @@ export const uploadToIPFS = async (file) => {
       formData,
       {
         headers: {
-            "Content-Type": "multipart/form-data",
-            pinata_api_key: process.env.NEXT_PUBLIC_PINATA_API_KEY,
-            pinata_secret_api_key: process.env.NEXT_PUBLIC_PINATA_SECRET_API_KEY,
-          }
-          
+          "Content-Type": "multipart/form-data",
+          pinata_api_key: process.env.NEXT_PUBLIC_PINATA_API_KEY,
+          pinata_secret_api_key: process.env.NEXT_PUBLIC_PINATA_SECRET_API_KEY,
+        }
+
       }
     );
 

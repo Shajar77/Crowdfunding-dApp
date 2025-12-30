@@ -50,7 +50,7 @@ const NavBar = () => {
           )}
         </div>
 
-        
+
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           className="lg:hidden text-white focus:outline-none"

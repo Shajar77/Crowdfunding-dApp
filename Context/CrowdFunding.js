@@ -26,39 +26,39 @@ export const CrowdFundingProvider = ({ children }) => {
     }
   };
 
-const createCampaign = async ({ title, description, amount, deadline, image }) => {
-  try {
-    const provider = new ethers.BrowserProvider(window.ethereum);
-    const signer = await provider.getSigner();
-    const contract = fetchContract(signer);
+  const createCampaign = async ({ title, description, amount, deadline, image }) => {
+    try {
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const contract = fetchContract(signer);
 
-    const target = ethers.parseEther(amount);
-    const timestamp = Math.floor(new Date(deadline).getTime() / 1000);
+      const target = ethers.parseEther(amount);
+      const timestamp = Math.floor(new Date(deadline).getTime() / 1000);
 
-    let imageUrl = "";
-    if (image) {
-      imageUrl = await uploadToIPFS(image);
+      let imageUrl = "";
+      if (image) {
+        imageUrl = await uploadToIPFS(image);
+      }
+
+      const tx = await contract.createCampaign(
+        await signer.getAddress(),
+        title,
+        description,
+        imageUrl,
+        target,
+        timestamp
+      );
+
+      console.log("📤 Waiting for confirmation...");
+      await tx.wait(); // Make sure it's mined before continuing
+      console.log("✅ Campaign created:", tx.hash);
+
+      return tx.hash; // Return something meaningful
+    } catch (error) {
+      console.error("❌ Campaign creation error:", error);
+      throw error;
     }
-
-    const tx = await contract.createCampaign(
-      await signer.getAddress(),
-      title,
-      description,
-      imageUrl,
-      target,
-      timestamp
-    );
-
-    console.log("📤 Waiting for confirmation...");
-    await tx.wait(); // Make sure it's mined before continuing
-    console.log("✅ Campaign created:", tx.hash);
-
-    return tx.hash; // Return something meaningful
-  } catch (error) {
-    console.error("❌ Campaign creation error:", error);
-    throw error;
-  }
-};
+  };
 
 
   const donate = async (campaignId, amount) => {
@@ -79,51 +79,51 @@ const createCampaign = async ({ title, description, amount, deadline, image }) =
     }
   };
 
-const getCampaigns = async (includeHidden = false) => {
-  try {
-    const provider = new ethers.BrowserProvider(window.ethereum);
-    const contract = fetchContract(provider);
+  const getCampaigns = async (includeHidden = false) => {
+    try {
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const contract = fetchContract(provider);
 
-    const [
-      owners,
-      titles,
-      descriptions,
-      images,
-      targets,
-      deadlines,
-      amountsCollected,
-      isHiddens
-    ] = await contract.getCampaigns();
+      const [
+        owners,
+        titles,
+        descriptions,
+        images,
+        targets,
+        deadlines,
+        amountsCollected,
+        isHiddens
+      ] = await contract.getCampaigns();
 
-    console.log("🛠 Raw campaigns data from contract:", {
-      owners, titles, descriptions, images, targets, deadlines, amountsCollected, isHiddens
-    });
+      console.log("🛠 Raw campaigns data from contract:", {
+        owners, titles, descriptions, images, targets, deadlines, amountsCollected, isHiddens
+      });
 
-    const allCampaigns = owners.map((_, i) => ({
-      id: i,
-      owner: owners[i],
-      title: titles[i],
-      description: descriptions[i],
-      image: images[i],
-      target: ethers.formatEther(targets[i]),
-      deadline: deadlines[i],
-      amountCollected: ethers.formatEther(amountsCollected[i]),
-      isHidden: isHiddens[i],
-    }));
+      const allCampaigns = owners.map((_, i) => ({
+        id: i,
+        owner: owners[i],
+        title: titles[i],
+        description: descriptions[i],
+        image: images[i],
+        target: ethers.formatEther(targets[i]),
+        deadline: deadlines[i],
+        amountCollected: ethers.formatEther(amountsCollected[i]),
+        isHidden: isHiddens[i],
+      }));
 
-    console.log("🛠 Formatted campaigns:", allCampaigns);
+      console.log("🛠 Formatted campaigns:", allCampaigns);
 
-    const filtered = includeHidden
-      ? allCampaigns
-      : allCampaigns.filter((c) => !c.isHidden);
+      const filtered = includeHidden
+        ? allCampaigns
+        : allCampaigns.filter((c) => !c.isHidden);
 
-    setCampaigns(filtered);
-    return filtered;
-  } catch (error) {
-    console.error("❌ Error getting campaigns:", error);
-    return [];
-  }
-};
+      setCampaigns(filtered);
+      return filtered;
+    } catch (error) {
+      console.error("❌ Error getting campaigns:", error);
+      return [];
+    }
+  };
 
 
   const getUserCampaigns = async () => {
@@ -133,30 +133,30 @@ const getCampaigns = async (includeHidden = false) => {
       const address = await signer.getAddress();
       const contract = fetchContract(provider);
 
-  const [
-  owners,
-  titles,
-  descriptions,
-  images,
-  targets,
-  deadlines,
-  amountsCollected,
-  isHiddens
-] = await contract.getCampaigns();
+      const [
+        owners,
+        titles,
+        descriptions,
+        images,
+        targets,
+        deadlines,
+        amountsCollected,
+        isHiddens
+      ] = await contract.getCampaigns();
 
-const userCampaigns = owners
-  .map((_, i) => ({
-    id: i,
-    owner: owners[i],
-    title: titles[i],
-    description: descriptions[i],
-    image: images[i], // include image
-    target: ethers.formatEther(targets[i]),
-    deadline: deadlines[i],
-    amountCollected: ethers.formatEther(amountsCollected[i]),
-    isHidden: isHiddens[i],
-  }))
-  .filter((c) => c.owner.toLowerCase() === address.toLowerCase());
+      const userCampaigns = owners
+        .map((_, i) => ({
+          id: i,
+          owner: owners[i],
+          title: titles[i],
+          description: descriptions[i],
+          image: images[i], // include image
+          target: ethers.formatEther(targets[i]),
+          deadline: deadlines[i],
+          amountCollected: ethers.formatEther(amountsCollected[i]),
+          isHidden: isHiddens[i],
+        }))
+        .filter((c) => c.owner.toLowerCase() === address.toLowerCase());
 
 
       return userCampaigns;

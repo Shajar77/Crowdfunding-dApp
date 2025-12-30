@@ -3,7 +3,7 @@ import '@/styles/globals.css';
 // Import Google Fonts using next/font
 import { Epilogue } from 'next/font/google';
 // Import components and context
-import { NavBar, Footer, Menu, Logo, Hero ,PopUp, Card} from '../Components';
+import { NavBar, Footer, Menu, Logo, Hero, PopUp, Card } from '../Components';
 import { CrowdFundingProvider } from '../Context/CrowdFunding';
 
 // Define the font using next/font
@@ -20,8 +20,8 @@ function MyApp({ Component, pageProps }) {
         <CrowdFundingProvider>
           <NavBar />
           <Menu />
-          <Card/>
-          <PopUp/>
+          <Card />
+          <PopUp />
           <Component {...pageProps} />
           <Footer />
         </CrowdFundingProvider>
