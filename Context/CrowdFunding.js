@@ -1,35 +1,44 @@
 import React, { createContext, useState, useEffect, useCallback, useMemo } from "react";
-import Web3Modal from "web3modal";
-import { ethers } from "ethers";
+// ethers is heavy - will be lazy loaded when needed
 import { CrowdFundingABI, CrowdFundingAddress } from "./contants";
 import { uploadToIPFS } from "@/utils/uploadToIPFS";
+
+// Lazy load ethers to reduce initial bundle size
+let ethers = null;
+const getEthers = async () => {
+  if (!ethers) {
+    ethers = await import("ethers");
+  }
+  return ethers;
+};
+
+// Error boundary for context operations
+const handleContextError = (error, operation) => {
+  console.error(`❌ ${operation} error:`, error);
+  // Could add error reporting service here
+  return null;
+};
 
 export const CrowdFundingContext = createContext();
 
 export const CrowdFundingProvider = ({ children }) => {
   const [currentAccount, setCurrentAccount] = useState("");
   const [campaigns, setCampaigns] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Initialize Web3Modal once
-  const web3Modal = useMemo(() => (typeof window !== "undefined" ? new Web3Modal() : null), []);
-
-  // Optimized contract fetcher
+  // Optimized contract fetcher with caching
   const getContract = useCallback(async (withSigner = false) => {
     try {
+      const { ethers } = await getEthers();
+      
       // Check if we are in the browser
       if (typeof window === "undefined") return null;
 
       // Handle Read-Only (no signer)
       if (!withSigner) {
-        // Use wallet provider if available
-        if (window.ethereum) {
-          const provider = new ethers.BrowserProvider(window.ethereum);
-          return new ethers.Contract(CrowdFundingAddress, CrowdFundingABI, provider);
-        }
-
-        // Fallback: Use a public RPC / Localhost for reading data if no wallet
-        const fallbackProvider = new ethers.JsonRpcProvider("http://127.0.0.1:8545");
-        return new ethers.Contract(CrowdFundingAddress, CrowdFundingABI, fallbackProvider);
+        if (!window.ethereum) return null;
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        return new ethers.Contract(CrowdFundingAddress, CrowdFundingABI, provider);
       }
 
       // Handle Signer (requires wallet)
@@ -42,18 +51,20 @@ export const CrowdFundingProvider = ({ children }) => {
       const signer = await provider.getSigner();
       return new ethers.Contract(CrowdFundingAddress, CrowdFundingABI, signer);
     } catch (error) {
-      console.error("❌ Error fetching contract:", error);
-      return null;
+      return handleContextError(error, "Contract fetch");
     }
   }, []);
 
-  const connectWallet = async () => {
+  const connectWallet = useCallback(async () => {
     try {
-      if (!web3Modal || typeof window === "undefined" || !window.ethereum) {
-        alert("Please install MetaMask or another Ethereum wallet.");
-        return;
+      if (typeof window === "undefined" || !window.ethereum) {
+        throw new Error("Please install MetaMask or another Ethereum wallet.");
       }
+      
+      const Web3Modal = (await import("web3modal")).default;
+      const web3Modal = new Web3Modal();
       const connection = await web3Modal.connect();
+      const { ethers } = await getEthers();
       const provider = new ethers.BrowserProvider(connection);
       const signer = await provider.getSigner();
       const address = await signer.getAddress();
@@ -61,16 +72,18 @@ export const CrowdFundingProvider = ({ children }) => {
       setCurrentAccount(address);
       return address;
     } catch (error) {
-      console.error("❌ Wallet connection error:", error);
+      return handleContextError(error, "Wallet connection");
     }
-  };
+  }, []);
 
-  const createCampaign = async ({ title, description, amount, deadline, image }) => {
+  const createCampaign = useCallback(async ({ title, description, amount, deadline, image }) => {
+    setIsLoading(true);
     try {
       if (!currentAccount) await connectWallet();
       const contract = await getContract(true);
       if (!contract) throw new Error("Contract not initialized with signer");
 
+      const { ethers } = await getEthers();
       const target = ethers.parseEther(amount);
       const timestamp = Math.floor(new Date(deadline).getTime() / 1000);
 
@@ -95,17 +108,20 @@ export const CrowdFundingProvider = ({ children }) => {
       await getCampaigns();
       return receipt.hash;
     } catch (error) {
-      console.error("❌ Campaign creation error:", error);
-      throw error;
+      throw handleContextError(error, "Campaign creation");
+    } finally {
+      setIsLoading(false);
     }
-  };
+  }, [currentAccount, connectWallet, getContract]);
 
-  const donate = async (campaignId, amount) => {
+  const donate = useCallback(async (campaignId, amount) => {
+    setIsLoading(true);
     try {
       if (!currentAccount) await connectWallet();
       const contract = await getContract(true);
       if (!contract) throw new Error("Contract not initialized with signer");
 
+      const { ethers } = await getEthers();
       const tx = await contract.donateToCampaign(campaignId, {
         value: ethers.parseEther(amount),
       });
@@ -114,10 +130,11 @@ export const CrowdFundingProvider = ({ children }) => {
       console.log("✅ Donation successful");
       await getCampaigns();
     } catch (error) {
-      console.error("❌ Donation failed:", error);
-      throw new Error("Donation failed");
+      throw handleContextError(error, "Donation");
+    } finally {
+      setIsLoading(false);
     }
-  };
+  }, [currentAccount, connectWallet, getContract]);
 
   const getCampaigns = useCallback(async () => {
     try {
@@ -125,7 +142,8 @@ export const CrowdFundingProvider = ({ children }) => {
       if (!contract) return [];
 
       const rawCampaigns = await contract.getCampaigns();
-
+      const { ethers } = await getEthers();
+      
       const formattedCampaigns = rawCampaigns.map((campaign, i) => ({
         id: i,
         owner: campaign.owner,
@@ -147,7 +165,7 @@ export const CrowdFundingProvider = ({ children }) => {
     }
   }, [getContract]);
 
-  const getUserCampaigns = async () => {
+  const getUserCampaigns = useCallback(async () => {
     try {
       if (!currentAccount) return [];
       const allCampaigns = await getCampaigns();
@@ -155,12 +173,11 @@ export const CrowdFundingProvider = ({ children }) => {
         (c) => c.owner.toLowerCase() === currentAccount.toLowerCase()
       );
     } catch (error) {
-      console.error("❌ Error getting user campaigns:", error);
-      return [];
+      return handleContextError(error, "Get user campaigns");
     }
-  };
+  }, [currentAccount, getCampaigns]);
 
-  const toggleCampaignVisibility = async (campaignId) => {
+  const toggleCampaignVisibility = useCallback(async (campaignId) => {
     try {
       const contract = await getContract(true);
       if (!contract) return;
@@ -171,27 +188,26 @@ export const CrowdFundingProvider = ({ children }) => {
 
       await getCampaigns();
     } catch (error) {
-      console.error("❌ Toggle visibility error:", error);
-      throw error;
+      throw handleContextError(error, "Toggle visibility");
     }
-  };
+  }, [getContract, getCampaigns]);
 
-  const getDonations = async (campaignId) => {
+  const getDonations = useCallback(async (campaignId) => {
     try {
       const contract = await getContract();
       if (!contract) return [];
 
       const [donators, donations] = await contract.getDonators(campaignId);
+      const { ethers } = await getEthers();
 
       return donators.map((donor, i) => ({
         donor,
         amount: ethers.formatEther(donations[i]),
       }));
     } catch (error) {
-      console.error("❌ Error fetching donations:", error);
-      return [];
+      return handleContextError(error, "Get donations");
     }
-  };
+  }, [getContract]);
 
   const checkIfWalletConnected = useCallback(async () => {
     if (typeof window === "undefined" || !window.ethereum) return;
@@ -201,10 +217,11 @@ export const CrowdFundingProvider = ({ children }) => {
         setCurrentAccount(accounts[0]);
       }
     } catch (error) {
-      console.error("❌ Error checking wallet connection:", error);
+      handleContextError(error, "Check wallet connection");
     }
   }, []);
 
+  // Optimized event handling with proper cleanup
   useEffect(() => {
     checkIfWalletConnected();
 
@@ -221,19 +238,32 @@ export const CrowdFundingProvider = ({ children }) => {
       window.ethereum.on("chainChanged", handleChainChanged);
 
       return () => {
-        window.ethereum.removeListener("accountsChanged", handleAccountsChanged);
-        window.ethereum.removeListener("chainChanged", handleChainChanged);
+        window.ethereum?.removeListener("accountsChanged", handleAccountsChanged);
+        window.ethereum?.removeListener("chainChanged", handleChainChanged);
       };
     }
   }, [checkIfWalletConnected]);
 
+  // Defer campaign fetch to reduce TBT - use requestIdleCallback or setTimeout
   useEffect(() => {
-    getCampaigns();
+    // Wait for main thread to be idle before fetching campaigns
+    const fetchCampaigns = () => getCampaigns();
+    
+    if (typeof window !== 'undefined') {
+      if ('requestIdleCallback' in window) {
+        window.requestIdleCallback(fetchCampaigns, { timeout: 2000 });
+      } else {
+        // Fallback for browsers without requestIdleCallback
+        setTimeout(fetchCampaigns, 100);
+      }
+    }
   }, [getCampaigns]);
 
+  // Memoize context value to prevent unnecessary re-renders
   const value = useMemo(() => ({
     currentAccount,
     campaigns,
+    isLoading,
     connectWallet,
     getCampaigns,
     getUserCampaigns,
@@ -241,7 +271,7 @@ export const CrowdFundingProvider = ({ children }) => {
     donate,
     getDonations,
     toggleCampaignVisibility,
-  }), [currentAccount, campaigns, getCampaigns]);
+  }), [currentAccount, campaigns, isLoading, connectWallet, getCampaigns, getUserCampaigns, createCampaign, donate, getDonations, toggleCampaignVisibility]);
 
   return (
     <CrowdFundingContext.Provider value={value}>

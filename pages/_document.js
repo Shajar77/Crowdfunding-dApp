@@ -4,14 +4,20 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
-        {/* Font Awesome CDN */}
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-          integrity="sha512-XxvA+zEcE0JqzG0ZDjNK5O2y+vWnD8AtT2Kvb6G5pKChIK2OzvbkqphMdt7Z4rM5UlAxTVPGcSqsKa+XPZrSwg=="
-          crossOrigin="anonymous"
-          referrerPolicy="no-referrer"
-        />
+        {/* SEO Meta */}
+        <meta name="description" content="Fundverse — The next generation of decentralized crowdfunding. Launch campaigns, back ideas, and build the future on-chain." />
+        <meta name="theme-color" content="#064e3b" />
+        <meta name="color-scheme" content="light" />
+
+        {/* Open Graph */}
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Fundverse — Decentralized Crowdfunding" />
+        <meta property="og:description" content="Launch campaigns on Ethereum. Get backed by a global community — transparent, trustless, and borderless." />
+
+        {/* Favicon */}
+        <link rel="icon" href="/favicon.ico" />
+
+        <link rel="preconnect" href="https://images.unsplash.com" />
       </Head>
       <body>
         <Main />
@@ -20,4 +26,3 @@ export default function Document() {
     </Html>
   );
 }
-

@@ -5,5 +5,6 @@ import Logo from './Logo.jsx';
 import Hero from './Hero.jsx';
 import Card from './Card.jsx';
 import PopUp from './PopUp.jsx';
+import PageShell from './PageShell.jsx';
 
-export { NavBar, Footer, Menu, Logo, Hero, Card, PopUp };
+export { NavBar, Footer, Menu, Logo, Hero, Card, PopUp, PageShell };

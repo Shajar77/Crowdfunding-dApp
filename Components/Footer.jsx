@@ -1,7 +1,35 @@
-import React from "react";
-import { motion } from "framer-motion";
-import { FaTwitter, FaGithub, FaLinkedinIn, FaDiscord } from "react-icons/fa";
-import { FiArrowUpRight } from "react-icons/fi";
+import React, { memo } from "react";
+
+const IconTwitter = (props) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+    <path d="M22 5.8c-.7.3-1.5.5-2.3.6.8-.5 1.4-1.2 1.7-2.1-.8.4-1.6.8-2.5.9a3.8 3.8 0 0 0-6.6 2.6c0 .3 0 .6.1.9A10.8 10.8 0 0 1 3 4.7a3.8 3.8 0 0 0 1.2 5.1c-.6 0-1.2-.2-1.7-.4v.1c0 1.8 1.3 3.3 3 3.6-.3.1-.7.1-1 .1-.2 0-.5 0-.7-.1.5 1.5 2 2.6 3.8 2.6A7.7 7.7 0 0 1 2 18.1a10.9 10.9 0 0 0 5.9 1.7c7 0 10.9-5.8 10.9-10.9v-.5c.8-.5 1.4-1.2 1.9-2z" />
+  </svg>
+);
+
+const IconGithub = (props) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+    <path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.9.6-3.5-1.2-3.5-1.2-.5-1.1-1.2-1.4-1.2-1.4-1-.7.1-.7.1-.7 1.1.1 1.7 1.1 1.7 1.1 1 .1 1.5-.8 1.5-.8 0-.8.3-1.3.6-1.6-2.3-.2-4.7-1.1-4.7-5a3.9 3.9 0 0 1 1-2.7 3.6 3.6 0 0 1 .1-2.6s.9-.3 2.8 1a9.7 9.7 0 0 1 5 0c1.9-1.3 2.8-1 2.8-1a3.6 3.6 0 0 1 .1 2.6 3.9 3.9 0 0 1 1 2.7c0 3.9-2.4 4.8-4.7 5 .3.3.6.8.6 1.8v2.6c0 .3.2.6.7.5A10 10 0 0 0 12 2z" />
+  </svg>
+);
+
+const IconLinkedIn = (props) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+    <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h4v1.7c.6-1 1.6-2 3.4-2 3 0 4.6 1.7 4.6 5.1V21h-4v-6c0-1.7-.6-2.7-2-2.7-1.1 0-1.7.7-2 1.4-.1.2-.1.6-.1.9V21H9z" />
+  </svg>
+);
+
+const IconDiscord = (props) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+    <path d="M20 4.7A19.2 19.2 0 0 0 15.6 3c-.2.3-.4.8-.5 1.1a18.2 18.2 0 0 0-5.2 0c-.1-.3-.3-.8-.5-1.1A19.2 19.2 0 0 0 5 4.7C2.7 8.1 2 11.4 2.3 14.6A19.5 19.5 0 0 0 8 18.4c.5-.7.9-1.5 1.2-2.2-.7-.2-1.3-.5-1.9-.8.2-.1.3-.2.5-.3 3.6 1.7 7.5 1.7 11.1 0 .2.1.3.2.5.3-.6.3-1.2.6-1.9.8.3.7.7 1.5 1.2 2.2a19.5 19.5 0 0 0 5.7-3.8c.4-3.8-.7-7.1-2.9-9.9zM9.6 13.2c-.9 0-1.6-.8-1.6-1.7 0-1 .7-1.7 1.6-1.7s1.6.8 1.6 1.7-.7 1.7-1.6 1.7zm4.8 0c-.9 0-1.6-.8-1.6-1.7 0-1 .7-1.7 1.6-1.7s1.6.8 1.6 1.7-.7 1.7-1.6 1.7z" />
+  </svg>
+);
+
+const IconArrowUpRight = (props) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>
+    <path d="M7 17L17 7" />
+    <path d="M9 7h8v8" />
+  </svg>
+);
 
 const LINKS = {
   Platform: ["White Paper", "Launch Campaign", "Explore Projects", "Tokenomics"],
@@ -10,170 +38,13 @@ const LINKS = {
 };
 
 const SOCIALS = [
-  { icon: FaTwitter, href: "https://twitter.com", label: "Twitter" },
-  { icon: FaDiscord, href: "https://discord.com", label: "Discord" },
-  { icon: FaGithub, href: "https://github.com", label: "GitHub" },
-  { icon: FaLinkedinIn, href: "https://linkedin.com", label: "LinkedIn" },
+  { icon: IconTwitter, href: "https://twitter.com", label: "Twitter" },
+  { icon: IconDiscord, href: "https://discord.com", label: "Discord" },
+  { icon: IconGithub, href: "https://github.com", label: "GitHub" },
+  { icon: IconLinkedIn, href: "https://linkedin.com", label: "LinkedIn" },
 ];
 
-
-
-
-const footerStyles = `
-      /* ── Shell ────────────────────────────────────────────── */
-      .ft {
-        position: relative;
-        background: linear-gradient(160deg, #f0fdf4 0%, #dcfce7 35%, #fff 60%, #f0fdf4 100%);
-        border-top: 1px solid rgba(16,185,129,0.18);
-        overflow: hidden;
-        font-family: 'Inter', sans-serif;
-      }
-
-      /* Grid lines */
-      .ft-grid {
-        position: absolute; inset: 0; pointer-events: none; z-index: 0;
-        background-image:
-          linear-gradient(rgba(16,185,129,0.07) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(16,185,129,0.05) 1px, transparent 1px);
-        background-size: 56px 56px;
-        mask-image: radial-gradient(ellipse 80% 60% at 50% 100%, #000 0%, transparent 85%);
-      }
-
-      /* Corner orbs */
-      .ft-orb {
-        position: absolute; border-radius: 50%; pointer-events: none; z-index: 0;
-      }
-      .ft-orb-1 {
-        width: 500px; height: 400px;
-        bottom: -120px; left: -100px;
-        background: radial-gradient(circle, rgba(16,185,129,0.10) 0%, transparent 70%);
-        filter: blur(48px);
-      }
-      .ft-orb-2 {
-        width: 420px; height: 350px;
-        top: -80px; right: -80px;
-        background: radial-gradient(circle, rgba(52,211,153,0.08) 0%, transparent 70%);
-        filter: blur(48px);
-      }
-
-      /* Inner */
-      .ft-inner {
-        position: relative; z-index: 1;
-        max-width: 1280px; margin: 0 auto;
-        padding: 80px 32px 0;
-      }
-
-
-
-      /* ── Main grid ───────────────────────────────────────── */
-      .ft-grid-main {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 48px;
-        margin-bottom: 64px;
-      }
-      @media(min-width:768px) {
-        .ft-grid-main { grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 32px; }
-      }
-
-      /* Brand column */
-      .ft-brand-logo {
-        font-family: 'Bricolage Grotesque', 'Inter', sans-serif;
-        font-size: 28px; font-weight: 800;
-        letter-spacing: -0.04em;
-        background: linear-gradient(135deg, #064e3b 0%, #10b981 100%);
-        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        background-clip: text;
-        margin-bottom: 14px; display: inline-block;
-      }
-      .ft-brand-desc {
-        font-size: 14px; line-height: 1.7;
-        color: #6b7280; max-width: 280px;
-        margin-bottom: 24px; font-weight: 400;
-      }
-      .ft-socials { display: flex; gap: 8px; }
-      .ft-social-btn {
-        width: 38px; height: 38px; border-radius: 10px;
-        background: rgba(255,255,255,0.7);
-        border: 1px solid rgba(16,185,129,0.18);
-        display: flex; align-items: center; justify-content: center;
-        color: #047857; font-size: 14px;
-        text-decoration: none;
-        box-shadow: 0 2px 6px rgba(6,78,59,0.06), inset 0 1px 0 rgba(255,255,255,0.8);
-        transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
-        backdrop-filter: blur(8px);
-      }
-      .ft-social-btn:hover {
-        transform: translateY(-2px);
-        border-color: rgba(16,185,129,0.35);
-        background: rgba(16,185,129,0.08);
-        color: #10b981;
-      }
-
-      /* Link columns */
-      .ft-col-head {
-        font-size: 11px; font-weight: 700;
-        letter-spacing: 0.1em; text-transform: uppercase;
-        color: #064e3b; margin-bottom: 18px;
-        display: flex; align-items: center; gap: 6px;
-      }
-      .ft-col-head::before {
-        content: '';
-        display: block; width: 16px; height: 2px; border-radius: 1px;
-        background: linear-gradient(90deg, #10b981, #34d399);
-        flex-shrink: 0;
-      }
-      .ft-col-links { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
-      .ft-col-link {
-        font-size: 13.5px; font-weight: 500;
-        color: #6b7280; text-decoration: none;
-        display: inline-flex; align-items: center; gap: 5px;
-        transition: color 0.18s ease;
-      }
-      .ft-col-link:hover { color: #10b981; }
-      .ft-col-link svg { opacity: 0; transition: opacity 0.18s ease, transform 0.18s ease; font-size: 10px; }
-      .ft-col-link:hover svg { opacity: 1; transform: translate(1px,-1px); }
-
-      /* ── Bottom bar ──────────────────────────────────────── */
-      .ft-bottom {
-        border-top: 1px solid rgba(16,185,129,0.12);
-        padding: 24px 0 32px;
-        display: flex; flex-wrap: wrap;
-        align-items: center; justify-content: space-between;
-        gap: 16px;
-      }
-      .ft-copy {
-        font-size: 12.5px; color: #9ca3af; font-weight: 500;
-      }
-      .ft-copy strong { color: #065f46; font-weight: 700; }
-      .ft-legal {
-        display: flex; gap: 20px;
-      }
-      .ft-legal a {
-        font-size: 12px; font-weight: 500;
-        color: #9ca3af; text-decoration: none;
-        transition: color 0.15s;
-      }
-      .ft-legal a:hover { color: #10b981; }
-      .ft-badge {
-        display: inline-flex; align-items: center; gap: 6px;
-        padding: 5px 12px; border-radius: 999px;
-        background: rgba(16,185,129,0.08);
-        border: 1px solid rgba(16,185,129,0.18);
-        font-size: 11px; font-weight: 700;
-        color: #047857; letter-spacing: 0.04em;
-      }
-      .ft-badge-dot {
-        width: 5px; height: 5px; border-radius: 50%;
-        background: #10b981;
-        box-shadow: 0 0 6px rgba(16,185,129,0.8);
-      }
-`;
-
-const Footer = () => (
-  <>
-    <style>{footerStyles}</style>
-
+const Footer = memo(() => (
     <footer className="ft">
       <div className="ft-grid" />
       <div className="ft-orb ft-orb-1" />
@@ -181,17 +52,10 @@ const Footer = () => (
 
       <div className="ft-inner">
 
-
-
         {/* Main grid */}
         <div className="ft-grid-main">
           {/* Brand */}
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
+          <div>
             <div className="ft-brand-logo">Fundverse</div>
             <p className="ft-brand-desc">
               The next generation of decentralised crowdfunding. Launch campaigns, back ideas, and build the future — on-chain, transparent, borderless.
@@ -200,20 +64,16 @@ const Footer = () => (
               {SOCIALS.map(({ icon: Icon, href, label }) => (
                 <a key={label} href={href} className="ft-social-btn"
                   target="_blank" rel="noopener noreferrer" aria-label={label}>
-                  <Icon />
+                  <Icon width={16} height={16} />
                 </a>
               ))}
             </div>
-          </motion.div>
+          </div>
 
           {/* Link columns */}
           {Object.entries(LINKS).map(([col, items], ci) => (
-            <motion.div
+            <div
               key={col}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: ci * 0.08 + 0.1 }}
             >
               <div className="ft-col-head">{col}</div>
               <ul className="ft-col-links">
@@ -221,19 +81,38 @@ const Footer = () => (
                   <li key={item}>
                     <a href="#" className="ft-col-link">
                       {item}
-                      <FiArrowUpRight />
+                      <IconArrowUpRight width={12} height={12} />
                     </a>
                   </li>
                 ))}
               </ul>
-            </motion.div>
+            </div>
           ))}
+        </div>
+
+        {/* Newsletter CTA */}
+        <div
+          className="ft-cta"
+        >
+          <div className="ft-cta-title">Stay in the <span>Loop</span></div>
+          <p className="ft-cta-sub">
+            Get weekly updates on trending campaigns, platform news, and Web3 insights.
+          </p>
+          <form className="ft-cta-form" onSubmit={(e) => e.preventDefault()}>
+            <input
+              className="ft-cta-input"
+              type="email"
+              placeholder="your@email.com"
+              aria-label="Email address"
+            />
+            <button className="ft-cta-btn" type="submit">Subscribe</button>
+          </form>
         </div>
 
         {/* Bottom bar */}
         <div className="ft-bottom">
           <p className="ft-copy">
-            © {new Date().getFullYear()} <strong>Fundverse</strong>. All rights reserved. A project by Tradewizzz.
+            © <span suppressHydrationWarning>{new Date().getFullYear()}</span> <strong>Fundverse</strong>. All rights reserved. A project by Tradewizzz.
           </p>
           <div className="ft-legal">
             <a href="#">Privacy Policy</a>
@@ -247,7 +126,8 @@ const Footer = () => (
         </div>
       </div>
     </footer>
-  </>
-);
+));
+
+Footer.displayName = "Footer";
 
 export default Footer;

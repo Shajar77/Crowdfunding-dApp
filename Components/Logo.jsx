@@ -1,16 +1,16 @@
-import React from "react";
+import React, { memo } from "react";
 
-const NavBar = () => {
-  return (
-    <nav>
-      <div className="logo">
-        {/* Logo path will be /images/logo.png */}
-        <img src="/images/logo.png" alt="Logo" className="w-15 h-15" />
-        <span className="brand-name"></span>
-      </div>
-    </nav>
-  );
-};
+const Logo = memo(() => (
+  <img
+    src="/images/logo.png"
+    alt="Fundverse Logo"
+    width={56}
+    height={56}
+    style={{ objectFit: 'contain' }}
+    loading="eager"
+  />
+));
 
-export default NavBar;
+Logo.displayName = "Logo";
 
+export default Logo;

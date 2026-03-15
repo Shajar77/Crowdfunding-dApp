@@ -1,7 +1,31 @@
-import React, { useEffect, useContext, useState, useMemo } from "react";
+import React, { useContext, useState, useMemo, useCallback, useEffect, lazy, Suspense } from "react";
 import { CrowdFundingContext } from "@/Context/CrowdFunding";
-import { Hero, Card, PopUp } from "../Components";
-import { motion, AnimatePresence } from "framer-motion";
+
+// Lazy load components to reduce initial bundle size
+const Hero = lazy(() => import("../Components/Hero"));
+const Card = lazy(() => import("../Components/Card"));
+const PopUp = lazy(() => import("../Components/PopUp"));
+
+// Loading fallback components
+const HeroSkeleton = () => (
+  <div className="animate-pulse bg-gradient-to-br from-green-50 to-emerald-100 h-screen flex items-center justify-center">
+    <div className="text-center">
+      <div className="h-12 bg-green-200 rounded w-64 mx-auto mb-4"></div>
+      <div className="h-4 bg-green-100 rounded w-96 mx-auto"></div>
+    </div>
+  </div>
+);
+
+const CardSkeleton = () => (
+  <div className="animate-pulse bg-white rounded-xl shadow-lg overflow-hidden">
+    <div className="h-48 bg-gray-200"></div>
+    <div className="p-6">
+      <div className="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
+      <div className="h-4 bg-gray-100 rounded w-full mb-4"></div>
+      <div className="h-4 bg-gray-100 rounded w-2/3"></div>
+    </div>
+  </div>
+);
 
 /* ─── Sample campaigns shown before wallet is connected ─────────────── */
 const SAMPLE_CAMPAIGNS = [
@@ -85,55 +109,17 @@ const SAMPLE_CAMPAIGNS = [
   },
 ];
 
-const sectionHeadStyles = `
-      .sh-eyebrow {
-        display: inline-flex; align-items: center; gap: 8px;
-        padding: 6px 16px 6px 8px; border-radius: 999px; margin-bottom: 18px;
-        background: rgba(16,185,129,0.07);
-        border: 1px solid rgba(16,185,129,0.20);
-        font-family: 'Inter', sans-serif;
-        font-size: 11px; font-weight: 700; letter-spacing: 0.09em;
-        text-transform: uppercase; color: #047857;
-      }
-      .sh-eyebrow span {
-        width: 6px; height: 6px; border-radius: 50%;
-        background: #10b981;
-        box-shadow: 0 0 8px rgba(16,185,129,0.8);
-        display: inline-block; flex-shrink: 0;
-      }
-      .sh-title {
-        font-family: 'Bricolage Grotesque','Inter',sans-serif;
-        font-size: clamp(1.8rem, 3.5vw, 2.6rem); font-weight: 800;
-        letter-spacing: -0.04em; line-height: 1.1;
-        color: #064e3b; margin-bottom: 14px;
-      }
-      .sh-title em {
-        font-style: normal;
-        background: linear-gradient(110deg, #10b981 0%, #059669 100%);
-        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        background-clip: text;
-      }
-      .sh-sub {
-        font-family: 'Inter', sans-serif;
-        font-size: 15px; color: #6b7280; font-weight: 400;
-        max-width: 480px; margin: 0 auto; line-height: 1.65;
-      }
-`;
-
 /* ─── Section header component ──────────────────────────────────────── */
 const SectionHead = React.memo(({ eyebrow, title, subtitle }) => (
-  <motion.div
-    style={{ textAlign: "center", marginBottom: 48 }}
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    transition={{ duration: 0.6 }}
-  >
-    <style>{sectionHeadStyles}</style>
+  <div style={{ textAlign: "center", marginBottom: 48 }}>
     {eyebrow && <div className="sh-eyebrow"><span />{eyebrow}</div>}
-    <h2 className="sh-title" dangerouslySetInnerHTML={{ __html: title }} />
+    {typeof title === "string" ? (
+      <h2 className="sh-title" dangerouslySetInnerHTML={{ __html: title }} />
+    ) : (
+      <h2 className="sh-title">{title}</h2>
+    )}
     <p className="sh-sub">{subtitle}</p>
-  </motion.div>
+  </div>
 ));
 
 /* ─── Empty state ───────────────────────────────────────────────────── */
@@ -141,70 +127,15 @@ const EmptyState = ({ message }) => (
   <div style={{
     gridColumn: "1 / -1", textAlign: "center",
     padding: "60px 24px",
-    background: "rgba(255,255,255,0.6)",
+    background: "rgba(255,255,255,0.88)",
     border: "1px dashed rgba(16,185,129,0.25)",
     borderRadius: 20,
-    backdropFilter: "blur(8px)",
     fontFamily: "'Inter', sans-serif",
   }}>
     <div style={{ fontSize: 36, marginBottom: 14 }}>🌿</div>
     <p style={{ color: "#6b7280", fontSize: 15, fontWeight: 500 }}>{message}</p>
   </div>
 );
-
-/* ── shared card grid styles injected once ── */
-const gridStyles = `
-  .pg-section {
-    position: relative;
-    padding: 80px 32px;
-    font-family: 'Inter', sans-serif;
-  }
-  .pg-section-alt {
-    background: linear-gradient(180deg, rgba(240,253,244,0.6) 0%, rgba(255,255,255,0.4) 100%);
-  }
-  .pg-inner { max-width: 1280px; margin: 0 auto; }
-
-  /* Grid line overlay */
-  .pg-grid-bg {
-    position: absolute; inset: 0; pointer-events: none; z-index: 0;
-    background-image:
-      linear-gradient(rgba(16,185,129,0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(16,185,129,0.04) 1px, transparent 1px);
-    background-size: 56px 56px;
-    mask-image: radial-gradient(ellipse 100% 80% at 50% 50%, #000 0%, transparent 100%);
-  }
-
-  .pg-card-grid {
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    gap: 24px;
-  }
-  @media(min-width:640px)  { .pg-card-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media(min-width:1024px) { .pg-card-grid { grid-template-columns: repeat(3, 1fr); } }
-
-  /* Sample banner */
-  .pg-sample-banner {
-    display: flex; align-items: center; gap: 12px;
-    padding: 14px 20px; border-radius: 14px; margin-bottom: 36px;
-    background: rgba(255,255,255,0.7);
-    border: 1px solid rgba(16,185,129,0.20);
-    box-shadow: 0 2px 12px rgba(6,78,59,0.05);
-    backdrop-filter: blur(10px);
-    font-size: 13.5px; font-weight: 500; color: #065f46;
-  }
-  .pg-sample-dot {
-    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
-    background: #10b981; box-shadow: 0 0 8px rgba(16,185,129,0.8);
-  }
-  .pg-sample-banner strong { font-weight: 700; color: #064e3b; }
-
-  /* Section divider */
-  .pg-divider {
-    height: 1px; margin: 0 auto 64px;
-    max-width: 1280px;
-    background: linear-gradient(90deg, transparent, rgba(16,185,129,0.2), transparent);
-  }
-`;
 
 /* ═══════════════════════════════════════════════════════════════════════ */
 const Index = () => {
@@ -221,89 +152,66 @@ const Index = () => {
     return campaigns.filter(c => c.owner.toLowerCase() === currentAccount.toLowerCase());
   }, [campaigns, currentAccount]);
 
-  const handleToggle = async (id) => {
-    try {
-      await toggleCampaignVisibility(id);
-    } catch (err) {
-      console.error("❌ Failed to toggle visibility:", err);
-    }
-  };
+  const handleToggle = useCallback(async (id) => {
+    try { await toggleCampaignVisibility(id); }
+    catch (err) { console.error("❌ Failed to toggle visibility:", err); }
+  }, [toggleCampaignVisibility]);
 
-  const handleCreate = async (formData) => {
-    try {
-      await createCampaign(formData);
-    } catch (e) {
-      console.error("❌ Create campaign error:", e);
-    }
-  };
+  const handleCreate = useCallback(async (formData) => {
+    try { await createCampaign(formData); }
+    catch (e) { console.error("❌ Create campaign error:", e); }
+  }, [createCampaign]);
 
   const showSamples = !currentAccount;
 
   return (
     <>
-      <style>{gridStyles}</style>
 
-      {/* Hero */}
-      <Hero titleData="Support Projects You Love" createCampaign={handleCreate} />
+      {/* Hero section with lazy loading */}
+      <Suspense fallback={<HeroSkeleton />}>
+        <Hero createCampaign={handleCreate} />
+      </Suspense>
 
       {/* ── All / Sample Campaigns ──────────────────────────────────── */}
       <section className="pg-section" style={{ position: "relative" }}>
         <div className="pg-grid-bg" />
-        <div className="pg-inner" style={{ position: "relative", zIndex: 1 }}>
+        <div className="pg-inner">
           <SectionHead
-            title={showSamples ? "Discover <em>Trending</em> Campaigns" : "All <em>Active</em> Campaigns"}
-            subtitle={
-              showSamples
-                ? "Connect your wallet to see live campaigns and start backing ideas that matter."
-                : "Live campaigns raising funds on-chain right now."
-            }
+            eyebrow="Featured"
+            title="<em>Active</em> Campaigns"
+            subtitle="Discover and support innovative projects from creators worldwide."
           />
 
-          {/* Sample wallet-connect notice */}
-          <AnimatePresence>
-            {showSamples && (
-              <motion.div
-                className="pg-sample-banner"
-                initial={{ opacity: 0, y: -8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.3 }}
-              >
-                <span className="pg-sample-dot" />
-                <span>
-                  <strong>Sample campaigns</strong> — Connect your wallet above to view live on-chain campaigns and donate.
-                </span>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
           <div className="pg-card-grid">
-            <AnimatePresence mode="popLayout">
-              {showSamples ? (
-                SAMPLE_CAMPAIGNS.map((c) => (
-                  <Card key={c.id} campaign={c} isSample={true} currentAccount={null} />
-                ))
-              ) : campaigns.length > 0 ? (
-                campaigns.map((c) => (
+            {showSamples ? (
+              SAMPLE_CAMPAIGNS.map((c, i) => (
+                <Suspense key={c.id} fallback={<CardSkeleton />}>
+                  <Card campaign={c} isSample={true} currentAccount={null} priority={i < 3} />
+                </Suspense>
+              ))
+            ) : campaigns.length > 0 ? (
+              campaigns.map((c, i) => (
+                <Suspense key={c.id} fallback={<CardSkeleton />}>
                   <Card
-                    key={c.id} campaign={c}
+                    campaign={c}
                     setOpenModel={setOpenModel} setDonate={setDonateCampaign}
                     onToggleHidden={handleToggle}
                     currentAccount={currentAccount}
+                    priority={i < 3}
                   />
-                ))
-              ) : (
-                <EmptyState message="No active campaigns yet. Be the first to launch one!" />
-              )}
-            </AnimatePresence>
+                </Suspense>
+              ))
+            ) : (
+              <EmptyState message="No active campaigns yet. Be the first to launch one!" />
+            )}
           </div>
         </div>
       </section>
 
-      {/* ── Divider ──────────────────────────────────────────────────── */}
+      {/* Divider */}
       {currentAccount && <div className="pg-divider" />}
 
-      {/* ── Your Campaigns ───────────────────────────────────────────── */}
+      {/* Your Campaigns */}
       {currentAccount && (
         <section className="pg-section pg-section-alt" style={{ position: "relative" }}>
           <div className="pg-grid-bg" />
@@ -314,28 +222,31 @@ const Index = () => {
               subtitle="Campaigns you've created — manage, track donations, and toggle visibility."
             />
             <div className="pg-card-grid">
-              <AnimatePresence mode="popLayout">
-                {userCampaigns.length > 0 ? (
-                  userCampaigns.map((c) => (
+              {userCampaigns.length > 0 ? (
+                userCampaigns.map((c, i) => (
+                  <Suspense key={c.id} fallback={<CardSkeleton />}>
                     <Card
-                      key={c.id} campaign={c}
+                      campaign={c}
                       setOpenModel={setOpenModel} setDonate={setDonateCampaign}
                       onToggleHidden={handleToggle}
                       currentAccount={currentAccount}
+                      priority={i < 3}
                     />
-                  ))
-                ) : (
-                  <EmptyState message="You haven't created any campaigns yet. Launch your first one above!" />
-                )}
-              </AnimatePresence>
+                  </Suspense>
+                ))
+              ) : (
+                <EmptyState message="You haven't created any campaigns yet. Launch your first one above!" />
+              )}
             </div>
           </div>
         </section>
       )}
 
-      {/* Donate popup */}
+      {/* Donate popup with lazy loading */}
       {openModel && donateCampaign && (
-        <PopUp setOpenModel={setOpenModel} donate={donateCampaign} donateFunction={donate} />
+        <Suspense fallback={null}>
+          <PopUp setOpenModel={setOpenModel} donate={donateCampaign} donateFunction={donate} />
+        </Suspense>
       )}
     </>
   );
