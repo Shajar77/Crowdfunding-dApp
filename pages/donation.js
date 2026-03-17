@@ -4,10 +4,10 @@ import { CrowdFundingContext } from "../Context/CrowdFunding";
 import PageShell from "../Components/PageShell";
 import { Card, PopUp } from "../Components";
 import {
-  FiSearch, FiFilter, FiGrid, FiList,
-  FiArrowUpRight, FiHeart
+  FiSearch, FiGrid
 } from "react-icons/fi";
 import { FaEthereum } from "react-icons/fa";
+
 
 /* ── Samples ─────────────────────────────────────────────────────── */
 const SAMPLE_CAMPAIGNS = [
@@ -23,112 +23,66 @@ const CATEGORIES = ["All", "Environment", "Health", "Energy", "Education", "Tech
 
 /* ── Styles ──────────────────────────────────────────────────────── */
 const donStyles = `
-  /* ── Controls bar ──────────────────────────────────────── */
-  .dn-controls {
-    display: flex; flex-direction: column; gap: 14px;
-    margin-bottom: 32px;
-  }
-  @media(min-width: 768px) {
-    .dn-controls { flex-direction: row; align-items: center; }
-  }
-  .dn-search-wrap {
-    flex: 1; position: relative; display: flex; align-items: center;
-  }
-  .dn-search-icon {
-    position: absolute; left: 18px;
-    color: #9ca3af; font-size: 15px; pointer-events: none;
-  }
+  /* ── Overrides ────────────────────────────────────────── */
+  .ps-inner { padding-top: 60px !important; }
+  @media(min-width: 768px) { .ps-inner { padding-top: 80px !important; } }
+
+
+  /* ── Controls bar — Now below form ─────────────────────── */
+  .dn-controls { display: flex; flex-direction: column; gap: 14px; margin-bottom: 28px; }
+  @media(min-width: 768px) { .dn-controls { flex-direction: row; align-items: center; } }
+  .dn-search-wrap { flex: 1; position: relative; display: flex; align-items: center; width: 100%; }
+  .dn-search-icon { position: absolute; left: 18px; color: #9ca3af; font-size: 16px; pointer-events: none; }
   .dn-search-input {
-    width: 100%; padding: 14px 18px 14px 48px;
-    border-radius: 16px;
-    border: 1.5px solid rgba(16,185,129,0.18);
-    background: rgba(255,255,255,0.8);
-    backdrop-filter: blur(10px);
-    font-size: 14px; color: #064e3b;
-    font-family: 'Inter', sans-serif;
-    outline: none;
-    transition: border-color 0.25s, box-shadow 0.25s;
-    box-shadow: 0 2px 8px rgba(6,78,59,0.04);
+    width: 100%; padding: 14px 20px 14px 52px; border-radius: 16px;
+    border: 1.5px solid rgba(16,185,129,0.18); background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(10px); font-size: 14.5px; color: #064e3b; outline: none;
+    transition: all 0.2s ease;
   }
-  .dn-search-input::placeholder { color: #aab8b2; }
-  .dn-search-input:focus {
-    border-color: #10b981;
-    box-shadow: 0 0 0 3px rgba(16,185,129,0.08), 0 4px 12px rgba(6,78,59,0.06);
-  }
+  .dn-search-input:focus { border-color: #10b981; box-shadow: 0 0 0 4px rgba(16,185,129,0.1); }
 
   /* ── Category pills ────────────────────────────────────── */
-  .dn-cats {
-    display: flex; gap: 6px; overflow-x: auto;
-    padding-bottom: 4px;
-    scrollbar-width: none;
-  }
-  .dn-cats::-webkit-scrollbar { display: none; }
+  .dn-cats { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; }
   .dn-cat {
-    padding: 8px 18px; border-radius: 999px;
-    font-size: 12px; font-weight: 600;
-    color: #6b7280; white-space: nowrap;
-    background: rgba(255,255,255,0.7);
-    border: 1.5px solid rgba(16,185,129,0.12);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    backdrop-filter: blur(8px);
+    padding: 7px 16px; border-radius: 999px; font-size: 11.5px; font-weight: 600;
+    color: #6b7280; background: rgba(255,255,255,0.7); border: 1.5px solid rgba(16,185,129,0.12);
+    cursor: pointer; transition: all 0.2s ease;
   }
-  .dn-cat:hover {
-    border-color: rgba(16,185,129,0.3);
-    color: #065f46;
-    background: rgba(16,185,129,0.05);
-  }
-  .dn-cat.active {
-    background: linear-gradient(135deg, #10b981, #059669);
-    color: #fff; border-color: transparent;
-    box-shadow: 0 4px 12px rgba(16,185,129,0.25);
-  }
-
-  /* ── Connected banner ──────────────────────────────────── */
-  .dn-banner {
-    display: flex; align-items: center; gap: 12px;
-    padding: 16px 22px; border-radius: 18px;
-    margin-bottom: 28px;
-    background: rgba(255,255,255,0.75);
-    border: 1px solid rgba(16,185,129,0.2);
-    box-shadow: 0 4px 16px rgba(6,78,59,0.04);
-    backdrop-filter: blur(12px);
-  }
-  .dn-banner-dot {
-    width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
-    background: #10b981;
-    box-shadow: 0 0 0 3px rgba(16,185,129,0.15), 0 0 12px rgba(16,185,129,0.4);
-    animation: dnPulse 2.5s ease-in-out infinite;
-  }
-  @keyframes dnPulse {
-    0%, 100% { box-shadow: 0 0 0 3px rgba(16,185,129,0.15), 0 0 12px rgba(16,185,129,0.4); }
-    50% { box-shadow: 0 0 0 6px rgba(16,185,129,0.08), 0 0 20px rgba(16,185,129,0.2); }
-  }
-  .dn-banner-text { font-size: 14px; font-weight: 500; color: #065f46; }
-  .dn-banner-text strong { font-weight: 700; color: #064e3b; }
-
-  /* ── Empty state ───────────────────────────────────────── */
-  .dn-empty {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 72px 32px;
-    background: rgba(255,255,255,0.6);
-    border: 1.5px dashed rgba(16,185,129,0.25);
-    border-radius: 24px;
-    backdrop-filter: blur(10px);
-  }
-  .dn-empty-emoji { font-size: 48px; margin-bottom: 16px; }
-  .dn-empty-text { color: #6b7280; font-size: 16px; font-weight: 500; }
-  .dn-empty-sub { color: #9ca3af; font-size: 13px; margin-top: 6px; }
+  .dn-cat.active { background: linear-gradient(135deg, #10b981, #059669); color: #fff; border-color: transparent; }
 
   /* ── Result count ──────────────────────────────────────── */
-  .dn-count {
-    font-size: 12px; font-weight: 600; color: #9ca3af;
-    letter-spacing: 0.04em;
-    margin-bottom: 20px;
-    display: flex; align-items: center; gap: 6px;
-  }
+  .dn-count { font-size: 13px; font-weight: 600; color: #9ca3af; margin-bottom: 24px; display: flex; align-items: center; gap: 6px; }
   .dn-count strong { color: #065f46; }
+
+  /* ── Section Title ────────────────────────────────────── */
+  .dn-section-title {
+    font-family: var(--font-bricolage, "Bricolage Grotesque"), sans-serif;
+    font-size: clamp(2rem, 4vw, 2.6rem); font-weight: 800; color: #042f2e;
+    margin: 64px 0 24px; letter-spacing: -0.03em; line-height: 1.1;
+  }
+  .dn-section-title em {
+    font-style: normal;
+    background: linear-gradient(110deg, #10b981, #059669);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+
+  /* ── Status Banner ─────────────────────────────────────── */
+  .dn-banner {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
+  .dn-banner-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #10b981; box-shadow: 0 0 10px rgba(16,185,129,0.5);
+  }
+  .dn-banner-text {
+    font-size: 13.5px; font-weight: 500; color: #064e3b; line-height: 1.5;
+  }
+  .dn-banner-text strong { color: #064e3b; font-weight: 700; }
+
 `;
 
 const Donation = () => {
@@ -145,7 +99,7 @@ const Donation = () => {
   const isConnected = !!currentAccount;
 
   const displayCampaigns = useMemo(() => {
-    const source = isConnected ? campaigns : SAMPLE_CAMPAIGNS;
+    const source = [...campaigns, ...SAMPLE_CAMPAIGNS];
     let filtered = source;
     if (category !== "All") {
       filtered = filtered.filter(c => c.category === category);
@@ -158,63 +112,41 @@ const Donation = () => {
       );
     }
     return filtered;
-  }, [campaigns, isConnected, search, category]);
+  }, [campaigns, search, category]);
 
   const handleToggle = useCallback(async (id) => {
-    try { await toggleCampaignVisibility(id); } catch (e) { console.error(e); }
+    try { await toggleCampaignVisibility(id); } catch (e) { /* Error toggling visibility */ }
   }, [toggleCampaignVisibility]);
 
   return (
     <>
       <Head>
-        <title>Donate — Fundverse</title>
-        <meta name="description" content="Browse and donate to crowdfunding campaigns on Fundverse." />
+        <title>Campaigns — Fundverse</title>
+        <meta name="description" content="Browse, back, and launch crowdfunding campaigns on Fundverse." />
       </Head>
       <style>{donStyles}</style>
 
-      <PageShell
-        eyebrow="Contribute"
-        title="Back a <em>Campaign</em>"
-        subtitle="Explore projects you believe in and support them directly on-chain. Every donation goes straight to the creator — zero fees, instant delivery."
-      >
-        {/* ── Stats bar ───────────────────────────────────────── */}
-        <div className="ps-grid-4" style={{ marginBottom: 40 }}>
-          {[
-            { num: isConnected ? campaigns.length.toString() : "6", label: "Campaigns" },
-            { num: "0%", label: "Platform Fee" },
-            { num: "Instant", label: "Fund Transfer" },
-            { num: "100%", label: "On-Chain" },
-          ].map(({ num, label }) => (
-            <div
-              key={label}
-              className="ps-stat"
-            >
-              <div className="ps-stat-num">{num}</div>
-              <div className="ps-stat-label">{label}</div>
-            </div>
-          ))}
-        </div>
+      <PageShell>
 
-        {/* ── Controls ────────────────────────────────────────── */}
-        <div
-          className="dn-controls"
-        >
+        {/* ── Active Campaigns Section ── */}
+        <h2 className="dn-section-title">
+          Active <em>Campaigns</em>
+        </h2>
+
+        <div className="dn-controls">
           <div className="dn-search-wrap">
             <FiSearch className="dn-search-icon" />
             <input
-              className="dn-search-input"
               type="text"
-              placeholder="Search campaigns by title or description..."
+              className="dn-search-input"
+              placeholder="Search through all campaigns..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
         </div>
 
-        {/* ── Category pills ──────────────────────────────────── */}
-        <div
-          className="dn-cats"
-        >
+        <div className="dn-cats">
           {CATEGORIES.map((cat) => (
             <button
               key={cat}
@@ -228,10 +160,7 @@ const Donation = () => {
 
         {/* ── Status banner ───────────────────────────────────── */}
         {!isConnected && (
-          <div
-            className="dn-banner"
-            style={{ marginTop: 24 }}
-          >
+          <div className="dn-banner" style={{ margin: "24px 0" }}>
             <span className="dn-banner-dot" />
             <span className="dn-banner-text">
               <strong>Sample campaigns</strong> — Connect your wallet to view live on-chain campaigns and donate.
@@ -243,7 +172,7 @@ const Donation = () => {
         <div className="dn-count" style={{ marginTop: isConnected ? 24 : 0 }}>
           <FiGrid size={12} />
           Showing <strong>{displayCampaigns.length}</strong> campaign{displayCampaigns.length !== 1 ? "s" : ""}
-          {category !== "All" && <> in <strong>{category}</strong></>}
+          {category !== "All" && <>in <strong>{category}</strong></>}
         </div>
 
         {/* ── Campaign Grid ───────────────────────────────────── */}
@@ -253,17 +182,15 @@ const Donation = () => {
               <Card
                 key={c.id}
                 campaign={c}
-                isSample={!isConnected}
+                isSample={c.isSample}
                 currentAccount={currentAccount}
-                setOpenModel={isConnected ? setOpenModel : undefined}
-                setDonate={isConnected ? setDonateCampaign : undefined}
+                setOpenModel={!c.isSample && isConnected ? setOpenModel : undefined}
+                setDonate={!c.isSample && isConnected ? setDonateCampaign : undefined}
                 onToggleHidden={handleToggle}
               />
             ))
           ) : (
-            <div
-              className="dn-empty"
-            >
+            <div className="dn-empty">
               <div className="dn-empty-emoji">🔍</div>
               <p className="dn-empty-text">No campaigns found</p>
               <p className="dn-empty-sub">Try adjusting your search or category filter</p>
@@ -271,11 +198,9 @@ const Donation = () => {
           )}
         </div>
 
-        {/* ── CTA ─────────────────────────────────────────────── */}
+        {/* ── CTA for non-connected users ─────────────────────── */}
         {!isConnected && (
-          <div
-            className="ps-cta"
-          >
+          <div className="ps-cta" style={{ marginTop: 64 }}>
             <h2 className="ps-cta-title">Ready to <em>Donate?</em></h2>
             <p className="ps-cta-sub">Connect your wallet to see live campaigns and start backing projects you believe in.</p>
             <button className="ps-cta-btn" onClick={connectWallet}>

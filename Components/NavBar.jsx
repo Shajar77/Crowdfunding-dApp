@@ -1,13 +1,14 @@
 import React, { useState, useContext, useEffect, useCallback, memo, useMemo } from "react";
 import { CrowdFundingContext } from "../Context/CrowdFunding";
-import { Logo } from "../Components";
+import Logo from "./Logo";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 const NAV_LINKS = [
   { label: "Home", href: "/" },
-  { label: "White Paper", href: "/whitepaper" },
+  { label: "Campaigns", href: "/donation" },
+  { label: "Launch Campaign", href: "/launch" },
   { label: "Project", href: "/project" },
-  { label: "Donation", href: "/donation" },
 ];
 
 const WalletIcon = memo(() => (
@@ -26,10 +27,13 @@ WalletIcon.displayName = "WalletIcon";
 const NavBar = memo(() => {
   const { currentAccount, connectWallet } = useContext(CrowdFundingContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const router = useRouter();
 
   // Optimized scroll handler with passive event listener
   useEffect(() => {
+    setIsMounted(true);
     let ticking = false;
     
     const handleScroll = () => {
@@ -66,7 +70,7 @@ const NavBar = memo(() => {
   );
 
   return (
-    <nav className={`nb ${scrolled ? "scrolled" : "top"}`}>
+    <nav className={`nb ${isMounted && scrolled ? "scrolled" : "top"}`}>
       <div className="nb-line" />
 
       <div className="nb-wrap">
@@ -81,7 +85,7 @@ const NavBar = memo(() => {
         <ul className="nb-links">
           {NAV_LINKS.map(({ label, href }) => (
             <li key={href}>
-              <Link href={href} className="nb-link">
+              <Link href={href} className={`nb-link ${router.pathname === href ? "active" : ""}`}>
                 {label}
               </Link>
             </li>
@@ -98,13 +102,13 @@ const NavBar = memo(() => {
               onClick={connectWallet}
               aria-label="Connect wallet"
             >
-              <WalletIcon />
-              Connect Wallet
+              <span className="nb-btn-dot" aria-hidden="true" />
+              <span className="nb-btn-text">Connect Wallet</span>
             </button>
           ) : (
-            <div className="nb-badge" aria-label={`Connected: ${formattedAccount}`}>
-              <span className="nb-badge-dot" aria-hidden="true" />
-              {formattedAccount}
+            <div className="nb-btn" aria-label={`Connected: ${formattedAccount}`} style={{ cursor: 'default' }}>
+              <span className="nb-btn-dot" aria-hidden="true" />
+              <span className="nb-btn-text">{formattedAccount}</span>
             </div>
           )}
 
@@ -148,7 +152,7 @@ const NavBar = memo(() => {
           <div className="nb-drawer-inner">
             {NAV_LINKS.map(({ label, href }) => (
               <Link key={href} href={href} onClick={closeMenu}>
-                <div className="nb-mob-link">
+                <div className={`nb-mob-link ${router.pathname === href ? "active" : ""}`}>
                   {label}
                 </div>
               </Link>
@@ -158,13 +162,13 @@ const NavBar = memo(() => {
 
             {!currentAccount ? (
               <button className="nb-mob-btn" onClick={handleConnect}>
-                <WalletIcon />
-                Connect Wallet
+                <span className="nb-btn-dot" aria-hidden="true" />
+                <span className="nb-btn-text">Connect Wallet</span>
               </button>
             ) : (
-              <div className="nb-mob-badge">
-                <span className="nb-badge-dot" />
-                {formattedAccount}
+              <div className="nb-mob-btn" style={{ cursor: 'default' }}>
+                <span className="nb-btn-dot" aria-hidden="true" />
+                <span className="nb-btn-text">{formattedAccount}</span>
               </div>
             )}
           </div>

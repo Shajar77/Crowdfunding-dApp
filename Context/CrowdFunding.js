@@ -5,11 +5,22 @@ import { uploadToIPFS } from "@/utils/uploadToIPFS";
 
 // Lazy load ethers to reduce initial bundle size
 let ethers = null;
+let cachedProvider = null;
+
 const getEthers = async () => {
   if (!ethers) {
     ethers = await import("ethers");
   }
   return ethers;
+};
+
+const getProvider = async () => {
+  if (typeof window === "undefined" || !window.ethereum) return null;
+  if (!cachedProvider) {
+    const { ethers } = await getEthers();
+    cachedProvider = new ethers.BrowserProvider(window.ethereum);
+  }
+  return cachedProvider;
 };
 
 // Error boundary for context operations
@@ -30,24 +41,15 @@ export const CrowdFundingProvider = ({ children }) => {
   const getContract = useCallback(async (withSigner = false) => {
     try {
       const { ethers } = await getEthers();
-      
-      // Check if we are in the browser
-      if (typeof window === "undefined") return null;
+      const provider = await getProvider();
+      if (!provider) return null;
 
       // Handle Read-Only (no signer)
       if (!withSigner) {
-        if (!window.ethereum) return null;
-        const provider = new ethers.BrowserProvider(window.ethereum);
         return new ethers.Contract(CrowdFundingAddress, CrowdFundingABI, provider);
       }
 
       // Handle Signer (requires wallet)
-      if (!window.ethereum) {
-        console.warn("⚠️ No Ethereum wallet detected for signing transactions.");
-        return null;
-      }
-
-      const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
       return new ethers.Contract(CrowdFundingAddress, CrowdFundingABI, signer);
     } catch (error) {
@@ -101,9 +103,9 @@ export const CrowdFundingProvider = ({ children }) => {
         timestamp
       );
 
-      console.log("📤 Waiting for confirmation...");
+      // Waiting for confirmation...
       const receipt = await tx.wait();
-      console.log("✅ Campaign created:", receipt.hash);
+      // Campaign created:
 
       await getCampaigns();
       return receipt.hash;
@@ -127,7 +129,7 @@ export const CrowdFundingProvider = ({ children }) => {
       });
 
       await tx.wait();
-      console.log("✅ Donation successful");
+      // Donation successful
       await getCampaigns();
     } catch (error) {
       throw handleContextError(error, "Donation");
@@ -184,7 +186,7 @@ export const CrowdFundingProvider = ({ children }) => {
 
       const tx = await contract.toggleHidden(campaignId);
       await tx.wait();
-      console.log("✅ Visibility toggled");
+      // Visibility toggled
 
       await getCampaigns();
     } catch (error) {

@@ -77,11 +77,11 @@ contract CrowdFunding {
         campaign.donators.push(msg.sender);
         campaign.donations.push(amount);
 
-        (bool sent, ) = payable(campaign.owner).call{value: amount}("");
-        require(sent, "Failed to send Ether to campaign owner");
-
         campaign.amountCollected += amount;
         emit DonationReceived(_id, msg.sender, amount);
+
+        (bool sent, ) = payable(campaign.owner).call{value: amount}("");
+        require(sent, "Failed to send Ether to campaign owner");
     }
 
     /**

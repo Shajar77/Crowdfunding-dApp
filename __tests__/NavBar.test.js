@@ -61,7 +61,7 @@ describe('NavBar Component', () => {
     expect(screen.getByText('Home')).toBeInTheDocument()
     expect(screen.getByText('White Paper')).toBeInTheDocument()
     expect(screen.getByText('Project')).toBeInTheDocument()
-    expect(screen.getByText('Donation')).toBeInTheDocument()
+    expect(screen.getByText('Campaigns')).toBeInTheDocument()
   })
 
   test('shows connect wallet button when not connected', () => {
@@ -144,7 +144,7 @@ describe('NavBar Component', () => {
     expect(screen.getByText('Home').closest('a')).toHaveAttribute('href', '/')
     expect(screen.getByText('White Paper').closest('a')).toHaveAttribute('href', '/whitepaper')
     expect(screen.getByText('Project').closest('a')).toHaveAttribute('href', '/project')
-    expect(screen.getByText('Donation').closest('a')).toHaveAttribute('href', '/donation')
+    expect(screen.getByText('Campaigns').closest('a')).toHaveAttribute('href', '/donation')
   })
 
   test('shows wallet address with correct formatting', () => {

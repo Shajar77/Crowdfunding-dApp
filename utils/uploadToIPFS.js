@@ -22,7 +22,7 @@ export const uploadToIPFS = async (file) => {
     // If upload successful, return the IPFS URL
     return `https://ipfs.io/ipfs/${response.data.IpfsHash}`;
   } catch (error) {
-    console.error("Error uploading file to Pinata:", error);
+    // Error uploading file to Pinata
     throw new Error("Image upload failed");
   }
 };

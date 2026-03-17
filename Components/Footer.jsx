@@ -32,16 +32,31 @@ const IconArrowUpRight = (props) => (
 );
 
 const LINKS = {
-  Platform: ["White Paper", "Launch Campaign", "Explore Projects", "Tokenomics"],
-  Resources: ["Documentation", "Smart Contracts", "Audit Report", "Changelog"],
-  Company: ["About Us", "Blog", "Careers", "Contact"],
+  Platform: [
+    { name: "White Paper", href: "/whitepaper" },
+    { name: "Launch Campaign", href: "/launch" },
+    { name: "Explore Projects", href: "/donation" },
+    { name: "Tokenomics", href: "/tokenomics" }
+  ],
+  Resources: [
+    { name: "Documentation", href: "/docs" },
+    { name: "Smart Contracts", href: "https://github.com/fundverse/contracts" },
+    { name: "Audit Report", href: "/audit" },
+    { name: "Changelog", href: "/changelog" }
+  ],
+  Company: [
+    { name: "About Us", href: "/about" },
+    { name: "Blog", href: "/blog" },
+    { name: "Careers", href: "/careers" },
+    { name: "Contact", href: "/contact" }
+  ],
 };
 
 const SOCIALS = [
-  { icon: IconTwitter, href: "https://twitter.com", label: "Twitter" },
-  { icon: IconDiscord, href: "https://discord.com", label: "Discord" },
-  { icon: IconGithub, href: "https://github.com", label: "GitHub" },
-  { icon: IconLinkedIn, href: "https://linkedin.com", label: "LinkedIn" },
+  { icon: IconTwitter, href: "https://twitter.com/fundverse", label: "Twitter" },
+  { icon: IconDiscord, href: "https://discord.gg/fundverse", label: "Discord" },
+  { icon: IconGithub, href: "https://github.com/fundverse", label: "GitHub" },
+  { icon: IconLinkedIn, href: "https://linkedin.com/company/fundverse", label: "LinkedIn" },
 ];
 
 const Footer = memo(() => (
@@ -74,13 +89,14 @@ const Footer = memo(() => (
           {Object.entries(LINKS).map(([col, items], ci) => (
             <div
               key={col}
+              className={`ft-col-${col.toLowerCase()}`}
             >
               <div className="ft-col-head">{col}</div>
               <ul className="ft-col-links">
                 {items.map((item) => (
-                  <li key={item}>
-                    <a href="#" className="ft-col-link">
-                      {item}
+                  <li key={item.name}>
+                    <a href={item.href} className="ft-col-link">
+                      {item.name}
                       <IconArrowUpRight width={12} height={12} />
                     </a>
                   </li>
@@ -90,24 +106,7 @@ const Footer = memo(() => (
           ))}
         </div>
 
-        {/* Newsletter CTA */}
-        <div
-          className="ft-cta"
-        >
-          <div className="ft-cta-title">Stay in the <span>Loop</span></div>
-          <p className="ft-cta-sub">
-            Get weekly updates on trending campaigns, platform news, and Web3 insights.
-          </p>
-          <form className="ft-cta-form" onSubmit={(e) => e.preventDefault()}>
-            <input
-              className="ft-cta-input"
-              type="email"
-              placeholder="your@email.com"
-              aria-label="Email address"
-            />
-            <button className="ft-cta-btn" type="submit">Subscribe</button>
-          </form>
-        </div>
+
 
         {/* Bottom bar */}
         <div className="ft-bottom">
@@ -115,14 +114,11 @@ const Footer = memo(() => (
             © <span suppressHydrationWarning>{new Date().getFullYear()}</span> <strong>Fundverse</strong>. All rights reserved. A project by Tradewizzz.
           </p>
           <div className="ft-legal">
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
-            <a href="#">Cookie Policy</a>
+            <a href="/privacy">Privacy Policy</a>
+            <a href="/terms">Terms of Service</a>
+            <a href="/cookies">Cookie Policy</a>
           </div>
-          <div className="ft-badge">
-            <span className="ft-badge-dot" />
-            Mainnet Live
-          </div>
+
         </div>
       </div>
     </footer>

@@ -3,7 +3,7 @@
   position: relative;
   padding: 96px 32px;
   font-family: 'Inter', sans-serif;
-  background: linear-gradient(180deg, rgba(255,255,255,0.65) 0%, rgba(240,253,244,0.35) 100%);
+  background: transparent;
 }
 .pg-section::before {
   content: '';
@@ -12,7 +12,7 @@
   opacity: 0.6;
 }
 .pg-section-alt {
-  background: linear-gradient(180deg, rgba(240,253,244,0.75) 0%, rgba(255,255,255,0.6) 100%);
+  background: transparent;
 }
 .pg-inner { max-width: 1280px; margin: 0 auto; }
 
@@ -20,19 +20,20 @@
 .pg-grid-bg {
   position: absolute; inset: 0; pointer-events: none; z-index: 0;
   background-image:
-    linear-gradient(rgba(16,185,129,0.07) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(16,185,129,0.05) 1px, transparent 1px);
-  background-size: 56px 56px;
+    linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px);
+  background-size: 80px 80px;
   mask-image: radial-gradient(ellipse 100% 80% at 50% 50%, #000 0%, transparent 100%);
 }
 
 .pg-card-grid {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
-  gap: 24px;
+  gap: 20px;
 }
 @media(min-width:640px)  { .pg-card-grid { grid-template-columns: repeat(2, 1fr); } }
 @media(min-width:1024px) { .pg-card-grid { grid-template-columns: repeat(3, 1fr); } }
+@media(min-width:1280px) { .pg-card-grid { grid-template-columns: repeat(4, 1fr); } }
 
 /* Sample banner */
 .pg-sample-banner {
@@ -52,7 +53,5 @@
 
 /* Section divider */
 .pg-divider {
-  height: 1px; margin: 0 auto 64px;
-  max-width: 1280px;
-  background: linear-gradient(90deg, transparent, rgba(16,185,129,0.2), transparent);
+  display: none;
 }

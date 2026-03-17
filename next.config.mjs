@@ -19,7 +19,7 @@ const nextConfig = {
   compress: true,
   // Production optimizations
   experimental: {
-    optimizePackageImports: ['framer-motion', 'react-icons', 'lucide-react'],
+    optimizePackageImports: ['react-icons'],
   },
   // Turbopack config (Next.js 16+)
   turbopack: {
@@ -52,7 +52,7 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: '/(.*)',
+        source: '/_next/static/(.*)',
         headers: [
           {
             key: 'Cache-Control',

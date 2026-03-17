@@ -1,7 +1,16 @@
 import React, { useState, useEffect } from "react";
 
 const IconEthereum = (props) => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+    {...props}
+  >
     <path d="M12 2l6 10-6 4-6-4 6-10z" />
     <path d="M6 12l6 4 6-4" />
     <path d="M12 16v6" />
@@ -9,41 +18,95 @@ const IconEthereum = (props) => (
 );
 
 const IconShield = (props) => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+    {...props}
+  >
     <path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z" />
     <path d="M9 12l2 2 4-4" />
   </svg>
 );
 
 const IconCheckCircle = (props) => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.6"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+    {...props}
+  >
     <circle cx="12" cy="12" r="9" />
     <path d="M8.5 12.5l2.5 2.5 4.5-5" />
   </svg>
 );
 
 const IconClose = (props) => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+    {...props}
+  >
     <path d="M6 6l12 12M18 6l-12 12" />
   </svg>
 );
 
 const IconClock = (props) => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.6"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+    {...props}
+  >
     <circle cx="12" cy="12" r="9" />
     <path d="M12 7v6l4 2" />
   </svg>
 );
 
 const IconUser = (props) => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.6"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+    {...props}
+  >
     <circle cx="12" cy="8" r="4" />
     <path d="M4 20c1.5-3 4.5-5 8-5s6.5 2 8 5" />
   </svg>
 );
 
 const IconHeart = (props) => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+    {...props}
+  >
     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
   </svg>
 );
@@ -113,8 +176,11 @@ const popupStyles = `
 
   /* ── Header ────────────────────────────────────────────────── */
   .pu-header {
-    padding: 28px 28px 20px;
+    padding: 20px 20px 16px;
     border-bottom: 1px solid rgba(16,185,129,0.10);
+  }
+  @media(min-width: 480px) {
+    .pu-header { padding: 28px 28px 20px; }
   }
   .pu-eyebrow {
     display: inline-flex; align-items: center; gap: 6px;
@@ -144,8 +210,11 @@ const popupStyles = `
 
   /* ── Progress section ──────────────────────────────────────── */
   .pu-progress {
-    padding: 20px 28px;
+    padding: 16px 20px;
     border-bottom: 1px solid rgba(16,185,129,0.08);
+  }
+  @media(min-width: 480px) {
+    .pu-progress { padding: 20px 28px; }
   }
   .pu-prog-track {
     height: 8px; border-radius: 999px;
@@ -198,7 +267,10 @@ const popupStyles = `
 
   /* ── Body (input section) ──────────────────────────────────── */
   .pu-body {
-    padding: 22px 28px 24px;
+    padding: 16px 20px 20px;
+  }
+  @media(min-width: 480px) {
+    .pu-body { padding: 22px 28px 24px; }
   }
   .pu-input-label {
     font-size: 10px; font-weight: 800;
@@ -247,7 +319,10 @@ const popupStyles = `
 
   /* ── Actions ───────────────────────────────────────────────── */
   .pu-actions {
-    display: flex; gap: 10px;
+    display: flex; gap: 10px; flex-direction: column;
+  }
+  @media(min-width: 480px) {
+    .pu-actions { flex-direction: row; }
   }
   .pu-donate-btn {
     flex: 1; padding: 14px;
@@ -298,9 +373,12 @@ const popupStyles = `
 
   /* ── Trust footer ──────────────────────────────────────────── */
   .pu-trust {
-    display: flex; align-items: center; justify-content: center; gap: 16px;
-    padding: 14px 28px 18px;
+    display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;
+    padding: 12px 20px 16px;
     border-top: 1px solid rgba(16,185,129,0.08);
+  }
+  @media(min-width: 480px) {
+    .pu-trust { gap: 16px; padding: 14px 28px 18px; }
   }
   .pu-trust-item {
     display: flex; align-items: center; gap: 4px;
@@ -379,19 +457,25 @@ const PopUp = ({ setOpenModel, donate, donateFunction }) => {
 
   if (!donate) return null;
 
-  const {
-    id, title, description,
-    amountCollected, target, deadline, owner,
-  } = donate;
+  const { id, title, description, amountCollected, target, deadline, owner } =
+    donate;
 
-  const progress = Math.min((Number(amountCollected) / Number(target)) * 100, 100);
-  const usd = ((parseFloat(amount) || 0) * 3200).toLocaleString("en-US", { maximumFractionDigits: 0 });
+  const progress = Math.min(
+    (Number(amountCollected) / Number(target)) * 100,
+    100
+  );
+  const usd = ((parseFloat(amount) || 0) * 3200).toLocaleString("en-US", {
+    maximumFractionDigits: 0,
+  });
 
   useEffect(() => {
     if (!deadline) return;
     const update = () => {
       const left = Number(deadline) * 1000 - Date.now();
-      if (left <= 0) { setDaysLeft("Expired"); return; }
+      if (left <= 0) {
+        setDaysLeft("Expired");
+        return;
+      }
       const d = Math.floor(left / 86400000);
       const h = Math.floor((left / 3600000) % 24);
       setDaysLeft(`${d}d ${h}h`);
@@ -403,7 +487,9 @@ const PopUp = ({ setOpenModel, donate, donateFunction }) => {
 
   // Close on Escape
   useEffect(() => {
-    const handler = (e) => { if (e.key === "Escape") setOpenModel(false); };
+    const handler = (e) => {
+      if (e.key === "Escape") setOpenModel(false);
+    };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, [setOpenModel]);
@@ -419,7 +505,7 @@ const PopUp = ({ setOpenModel, donate, donateFunction }) => {
       await donateFunction(id, amount);
       setSuccess(true);
     } catch (err) {
-      console.error("Donation failed:", err);
+      // Donation failed:
       setError("Transaction failed. Please try again.");
     } finally {
       setLoading(false);
@@ -436,12 +522,13 @@ const PopUp = ({ setOpenModel, donate, donateFunction }) => {
           if (e.target === e.currentTarget) setOpenModel(false);
         }}
       >
-        <div
-          className="pu-card"
-          onClick={(e) => e.stopPropagation()}
-        >
+        <div className="pu-card" onClick={(e) => e.stopPropagation()}>
           {/* Close */}
-          <button className="pu-close" onClick={() => setOpenModel(false)} aria-label="Close">
+          <button
+            className="pu-close"
+            onClick={() => setOpenModel(false)}
+            aria-label="Close"
+          >
             <IconClose width={14} height={14} />
           </button>
 
@@ -453,9 +540,13 @@ const PopUp = ({ setOpenModel, donate, donateFunction }) => {
               </div>
               <div className="pu-success-title">Donation Sent!</div>
               <p className="pu-success-sub">
-                You've backed "{title}" with Ξ {amount}. Thank you for supporting this project.
+                You've backed "{title}" with Ξ {amount}. Thank you for
+                supporting this project.
               </p>
-              <button className="pu-success-btn" onClick={() => setOpenModel(false)}>
+              <button
+                className="pu-success-btn"
+                onClick={() => setOpenModel(false)}
+              >
                 Done
               </button>
             </div>
@@ -471,26 +562,29 @@ const PopUp = ({ setOpenModel, donate, donateFunction }) => {
           {/* Progress */}
           <div className="pu-progress">
             <div className="pu-prog-track">
-              <div
-                className="pu-prog-bar"
-                style={{ width: `${progress}%` }}
-              />
+              <div className="pu-prog-bar" style={{ width: `${progress}%` }} />
             </div>
             <div className="pu-prog-labels">
               <span className="pu-raised">
                 <span className="pu-raised-icon">Ξ</span>
                 {Number(amountCollected).toFixed(2)} raised
               </span>
-              <span className="pu-target-text">of Ξ {Number(target).toFixed(2)}</span>
+              <span className="pu-target-text">
+                of Ξ {Number(target).toFixed(2)}
+              </span>
             </div>
 
             <div className="pu-meta">
               <div className="pu-meta-item">
-                <div className="pu-meta-label"><IconClock width={10} height={10} /> Time Left</div>
+                <div className="pu-meta-label">
+                  <IconClock width={10} height={10} /> Time Left
+                </div>
                 <div className="pu-meta-value">{daysLeft || "—"}</div>
               </div>
               <div className="pu-meta-item">
-                <div className="pu-meta-label"><IconUser width={10} height={10} /> Owner</div>
+                <div className="pu-meta-label">
+                  <IconUser width={10} height={10} /> Owner
+                </div>
                 <div className="pu-meta-value" style={{ fontSize: 11 }}>
                   {owner ? `${owner.slice(0, 6)}…${owner.slice(-4)}` : "—"}
                 </div>
@@ -510,7 +604,10 @@ const PopUp = ({ setOpenModel, donate, donateFunction }) => {
                 min="0"
                 placeholder="0.00"
                 value={amount}
-                onChange={(e) => { setAmount(e.target.value); setError(""); }}
+                onChange={(e) => {
+                  setAmount(e.target.value);
+                  setError("");
+                }}
                 autoFocus
                 aria-label="Donation amount in ETH"
               />
@@ -523,11 +620,7 @@ const PopUp = ({ setOpenModel, donate, donateFunction }) => {
               </div>
             )}
 
-            {error && (
-              <p className="pu-err-msg">
-                {error}
-              </p>
-            )}
+            {error && <p className="pu-err-msg">{error}</p>}
 
             <div className="pu-actions">
               <button
@@ -536,7 +629,10 @@ const PopUp = ({ setOpenModel, donate, donateFunction }) => {
                 disabled={loading}
               >
                 {loading ? (
-                  <><div className="pu-spin" />&nbsp;Processing…</>
+                  <>
+                    <div className="pu-spin" />
+                    &nbsp;Processing…
+                  </>
                 ) : (
                   <>
                     <IconHeart width={14} height={14} />
@@ -544,7 +640,10 @@ const PopUp = ({ setOpenModel, donate, donateFunction }) => {
                   </>
                 )}
               </button>
-              <button className="pu-cancel-btn" onClick={() => setOpenModel(false)}>
+              <button
+                className="pu-cancel-btn"
+                onClick={() => setOpenModel(false)}
+              >
                 Cancel
               </button>
             </div>
@@ -552,11 +651,17 @@ const PopUp = ({ setOpenModel, donate, donateFunction }) => {
 
           {/* Trust footer */}
           <div className="pu-trust">
-            <div className="pu-trust-item"><IconShield width={10} height={10} /> Audited</div>
+            <div className="pu-trust-item">
+              <IconShield width={10} height={10} /> Audited
+            </div>
             <div className="pu-trust-sep" />
-            <div className="pu-trust-item"><IconCheckCircle width={10} height={10} /> Non-custodial</div>
+            <div className="pu-trust-item">
+              <IconCheckCircle width={10} height={10} /> Non-custodial
+            </div>
             <div className="pu-trust-sep" />
-            <div className="pu-trust-item"><IconEthereum width={10} height={10} /> 0% Fee</div>
+            <div className="pu-trust-item">
+              <IconEthereum width={10} height={10} /> 0% Fee
+            </div>
           </div>
         </div>
       </div>

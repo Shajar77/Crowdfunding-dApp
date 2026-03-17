@@ -1,9 +1,10 @@
 import '@/styles/globals.css';
+import '@/styles/footer.css';
 import '@/styles/navbar.css';
 import '@/styles/section-head.css';
 import '@/styles/page-grid.css';
+import '@/styles/hero-video.css';
 import { Inter } from 'next/font/google';
-import { Footer } from '../Components';
 import { CrowdFundingProvider } from '../Context/CrowdFunding';
 import { Toaster } from 'react-hot-toast';
 import Head from 'next/head';
@@ -25,14 +26,7 @@ const bricolage = Bricolage_Grotesque({
   variable: '--font-bricolage',
 });
 
-// Lazy load Footer to reduce initial bundle
-const LazyNavBar = dynamic(() => import('../Components').then(mod => ({ default: mod.NavBar })), {
-  ssr: false,
-});
-
-const LazyFooter = dynamic(() => import('../Components').then(mod => ({ default: mod.Footer })), {
-  ssr: false,
-});
+import { NavBar, Footer } from '../Components';
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -42,9 +36,9 @@ function MyApp({ Component, pageProps }) {
       </Head>
       <div className={`${inter.variable} ${inter.className} ${bricolage.variable}`}>
         <CrowdFundingProvider>
-          <LazyNavBar />
+          <NavBar />
           <Component {...pageProps} />
-          <LazyFooter />
+          <Footer />
         </CrowdFundingProvider>
         {/* Toast notifications — themed to match emerald design */}
         <Toaster

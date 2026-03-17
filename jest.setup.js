@@ -49,7 +49,7 @@ jest.mock('ethers', () => ({
 jest.mock('canvas-confetti', () => ({
   __esModule: true,
   default: jest.fn(),
-}))
+}), { virtual: true })
 
 // Mock react-hot-toast
 jest.mock('react-hot-toast', () => ({

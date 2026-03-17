@@ -44,8 +44,11 @@
 /* Container */
 .nb-wrap {
   max-width: 1280px; margin: 0 auto;
-  padding: 0 32px; height: 70px;
+  padding: 0 16px; height: 70px;
   display: flex; align-items: center; justify-content: space-between;
+}
+@media(min-width: 640px) {
+  .nb-wrap { padding: 0 32px; }
 }
 
 /* Logo */
@@ -94,6 +97,20 @@
 .nb-link:hover::after {
   transform: translateX(-50%) scaleX(1);
 }
+.nb-link.active {
+  color: #043d2d;
+}
+.nb-link.active::after {
+  transform: translateX(-50%) scaleX(1);
+}
+
+/* Mobile active link */
+.nb-mob-link.active {
+  color: #047857;
+  border-color: rgba(16,185,129,0.18);
+  background: rgba(16,185,129,0.06);
+  border-left: 2px solid #10b981;
+}
 
 /* Divider */
 .nb-divider {
@@ -110,42 +127,78 @@
   display: flex; align-items: center; gap: 10px;
 }
 
-/* Connect button */
+/* Connect button — signal dot + gradient text */
 .nb-btn {
   display: none;
-  align-items: center; gap: 8px;
-  padding: 10px 24px;
-  border-radius: 999px;
-  border: none; cursor: pointer;
-  font-family: 'Inter', sans-serif;
-  font-size: 13px; font-weight: 700;
-  letter-spacing: 0.02em;
-  color: #ffffff;
-  background: linear-gradient(135deg, #10b981 0%, #059669 55%, #047857 100%);
-  background-size: 160% 160%;
-  box-shadow:
-    0 8px 24px rgba(16,185,129,0.32),
-    0 1px 4px rgba(0,0,0,0.10),
-    inset 0 1px 0 rgba(255,255,255,0.18);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  position: relative; overflow: hidden;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 2px;
+  border: none;
+  cursor: pointer;
+  background: none;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #064e3b;
+  position: relative;
   white-space: nowrap;
+  transition: filter 0.3s ease;
 }
-.nb-btn::before {
+.nb-btn-text {
+  position: relative;
+  color: #064e3b;
+  -webkit-text-fill-color: #064e3b;
+  font-weight: 700;
+}
+.nb-btn-text::after {
   content: '';
-  position: absolute; top: 0; left: -80%; width: 50%; height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
-  transition: left 0.5s ease;
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, #10b981 0%, #0d9488 50%, #059669 100%);
+  border-radius: 2px;
+  transform: scaleX(1);
+  transform-origin: left;
+  transition: box-shadow 0.4s ease;
 }
-.nb-btn:hover::before { left: 140%; }
 .nb-btn:hover {
-  transform: translateY(-1px);
-  box-shadow:
-    0 8px 28px rgba(16,185,129,0.38),
-    0 2px 8px rgba(0,0,0,0.12),
-    inset 0 1px 0 rgba(255,255,255,0.18);
+  filter: brightness(1.15);
 }
-.nb-btn:active { transform: translateY(0); }
+.nb-btn:hover .nb-btn-text::after {
+  box-shadow: 0 0 12px rgba(16,185,129,0.4);
+}
+.nb-btn:active {
+  filter: brightness(0.95);
+}
+
+/* Pulsing signal dot */
+.nb-btn-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 3px rgba(16,185,129,0.4);
+  flex-shrink: 0;
+}
+@keyframes nbSignalPulse {
+  0%, 100% {
+    box-shadow: 0 0 3px rgba(16,185,129,0.4);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 6px rgba(16,185,129,0.5);
+    transform: scale(1.1);
+  }
+}
+.nb-btn:hover .nb-btn-dot {
+  box-shadow: 0 0 8px rgba(16,185,129,0.6);
+  transform: scale(1.15);
+}
+
 @media(min-width:1024px){ .nb-btn { display: flex; } }
 
 /* Wallet badge */
@@ -233,18 +286,24 @@
 }
 .nb-mob-btn {
   width: 100%; padding: 14px 20px;
-  border-radius: 14px; border: none; cursor: pointer;
-  font-family: 'Inter', sans-serif;
-  font-size: 14px; font-weight: 700;
-  color: #fff;
-  background: linear-gradient(135deg, #10b981 0%, #059669 60%, #047857 100%);
-  box-shadow: 0 4px 20px rgba(16,185,129,0.25);
+  border-radius: 14px;
+  border: 1px solid rgba(16,185,129,0.2);
+  cursor: pointer;
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background-image: linear-gradient(135deg, #059669, #0d9488, #10b981);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-color: rgba(16,185,129,0.04);
   display: flex; align-items: center; justify-content: center; gap: 10px;
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(8px);
 }
 .nb-mob-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 28px rgba(16,185,129,0.35);
+  border-color: rgba(16,185,129,0.4);
+  background-color: rgba(16,185,129,0.08);
 }
 .nb-mob-badge {
   width: 100%; padding: 13px 18px;
